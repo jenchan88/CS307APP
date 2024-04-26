@@ -4,7 +4,7 @@ import userModel from "./user.js";
 mongoose.set("debug", true);
 
 mongoose
-  .connect("mongodb+srv://jchan:pHLvRT7Av6OXQcDSbh14@cluster0.2kckdcc.mongodb.net/users", {
+  .connect("mongodb://localhost:27017/users", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -19,7 +19,10 @@ function getUsers(name, job) {
   } else if (job && !name) {
     promise = findUserByJob(job);
   }
-  console.log(promise)
+  else if (job && name) {
+    promise = findUserByNameAndJob(name, job);
+    console.log("Meow")
+  }
   return promise;
 }
 
@@ -41,12 +44,22 @@ function findUserByJob(job) {
   return userModel.find({ job: job });
 }
 
+function findUserByNameAndJob(name, job) {
+  return userModel.find({ name: name, job: job });
+}
+
+
+function findByIdAndDelete(id){
+  return userModel.findByIdAndDelete(id);
+}
+
 export default {
   addUser,
   getUsers,
   findUserById,
   findUserByName,
   findUserByJob,
+  findByIdAndDelete,
 };
 
 

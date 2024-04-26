@@ -216,7 +216,7 @@ app.get("/users", (req, res) => {
   userServices.getUsers(name, job)
   .then((result) => {
   if (result){
-    res.send({ users_list: result });
+    res.send(result);
   }
   else{
     res.status(404).send("Not Found");
@@ -244,5 +244,73 @@ app.get("/users", (req, res) => {
 // });
 
 
+// app.get("/users/:id", async (req, res) => {
+//   try {
+//     const user = userServices.findUserById(req.params.id);
+//     if (!user) {
+//       res.status(404).send("Resource not found.");
+//     } else {
+//       res.send(user);
+//     }
+//   } catch (error) {
+//     res.status(500).send(error.message);
+//   }
+// });
+app.get("/users/:id", (req, res) => {
+  userServices.findUserById(req.params.id)
+    .then((user) => {
+      if (!user) {
+        res.status(404).send("Resource not found.");
+      } else {
+        res.send(user);
+      }
+    })
+    .catch((error) => {
+      res.status(500).send(error.message);
+    });
+});
 
+
+// app.delete("/users/:id", async (req, res) => {
+//   try {
+//     const result = await userModel.findByIdAndDelete(req.params.id);
+//     if (!result) {
+//       res.status(404).send("Resource not found.");
+//     } else {
+//       res.status(204).send();
+//     }
+//   } catch (error) {
+//     res.status(500).send(error.message);
+//   }
+// });
+app.get("/users", (req, res) => {
+  const { name, job } = req.query;
+
+  userServices.getUsers(name, job)
+    .then((users) => {
+      if (users.length === 0) {
+        res.status(404).send("No users found.");
+      } else {
+        res.send(users);
+      }
+    })
+    .catch((error) => {
+      res.status(500).send(error.message);
+    });
+});
+
+
+app.delete("/users/:id", (req, res) => {
+  userServices.findByIdAndDelete(req.params.id)
+    .then((result) => {
+      if (!result) {
+        res.status(404).send("Resource not found.");
+      } else {
+        res.status(204).send();
+      }
+    })
+    .catch((error) => {
+      res.status(500).send(error.message);
+    });
+});
 

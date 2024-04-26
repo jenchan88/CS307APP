@@ -17,13 +17,14 @@ function MyApp() {
   // }
 
   function removeOneCharacter(index) {
-    const charID = characters[index].id
+    const charID = characters[index]._id
     fetch(`http://localhost:8000/users/${charID}`, {
       method: 'DELETE'
     })
     .then(response => {
       if (response.status === 204) {
-        setCharacters(characters.filter(character => character.id !== charID));
+        setCharacters(characters.filter(character => character._id !== charID));
+
       } else if (response.status === 404) {
         throw new Error('User not found');
       } else {
@@ -33,7 +34,7 @@ function MyApp() {
     .catch(error => {
       if (error instanceof SyntaxError) {
         console.log('User deleted successfully');
-        setCharacters(characters.filter(character => character.id !== charID));
+        setCharacters(characters.filter(character => character._id !== charID));
       } else {
         console.error('Error deleting user:', error);
       }
